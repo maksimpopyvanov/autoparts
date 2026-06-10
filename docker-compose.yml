@@ -31,6 +31,8 @@ services:
       DB_NAME: autoparts
       DB_PORT: 5432
       PORT: "80"
+    expose:
+      - "80"
     depends_on:
       migrate:
         condition: service_completed_successfully
