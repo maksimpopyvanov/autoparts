@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"embed"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -12,6 +14,9 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
+
+//go:embed frontend/dist
+var staticFiles embed.FS
 
 func main() {
 	ctx := context.Background()
@@ -58,6 +63,21 @@ func main() {
 
 		r.Get("/outcome", outcome.List)
 		r.Post("/outcome", outcome.Create)
+	})
+
+	// Раздаём собранный фронт
+	distFS, err := fs.Sub(staticFiles, "frontend/dist")
+	if err != nil {
+		log.Fatalf("не удалось подключить статику: %v", err)
+	}
+	fileServer := http.FileServer(http.FS(distFS))
+	r.Get("/*", func(w http.ResponseWriter, req *http.Request) {
+		_, err := distFS.Open(req.URL.Path[1:])
+		if err != nil {
+			// SPA fallback — отдаём index.html для любого неизвестного пути
+			req.URL.Path = "/"
+		}
+		fileServer.ServeHTTP(w, req)
 	})
 
 	port := getenv("PORT", "8080")
