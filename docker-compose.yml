@@ -7,8 +7,6 @@ services:
       POSTGRES_DB: ${DB_NAME}
     ports:
       - "${DB_PORT}:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
       interval: 3s
@@ -46,11 +44,8 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_URL: http://localhost:${APP_PORT}/api
+        VITE_API_URL: http://maksimpopyvanov-autoparts-8997.twc1.net:8080/api
     ports:
       - "${FRONTEND_PORT}:3000"
     depends_on:
       - app
-
-volumes:
-  pgdata:
