@@ -28,8 +28,7 @@ services:
       DB_PASSWORD: autoparts
       DB_NAME: autoparts
       DB_PORT: 5432
-    expose:
-      - "8080"
+      PORT: "80"
     depends_on:
       migrate:
         condition: service_completed_successfully
