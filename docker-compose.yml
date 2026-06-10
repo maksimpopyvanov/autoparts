@@ -28,18 +28,15 @@ services:
       DB_PASSWORD: autoparts
       DB_NAME: autoparts
       DB_PORT: 5432
-    ports:
-      - "8080:8080"
     depends_on:
       migrate:
         condition: service_completed_successfully
 
-  frontend:
+  nginx:
     build:
-      context: ./frontend
-      args:
-        VITE_API_URL: http://maksimpopyvanov-autoparts-a36b.twc1.net:8080/api
+      context: .
+      dockerfile: Dockerfile.nginx
     ports:
-      - "3000:3000"
+      - "80:80"
     depends_on:
       - app
