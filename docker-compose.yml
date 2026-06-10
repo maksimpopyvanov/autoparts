@@ -1,4 +1,19 @@
 services:
+  app:
+    build: .
+    environment:
+      DB_HOST: db
+      DB_USER: autoparts
+      DB_PASSWORD: autoparts
+      DB_NAME: autoparts
+      DB_PORT: 5432
+      PORT: "80"
+    expose:
+      - "80"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
   db:
     image: postgres:16-alpine
     environment:
@@ -19,18 +34,3 @@ services:
       db:
         condition: service_healthy
     restart: on-failure
-
-  app:
-    build: .
-    environment:
-      DB_HOST: db
-      DB_USER: autoparts
-      DB_PASSWORD: autoparts
-      DB_NAME: autoparts
-      DB_PORT: 5432
-      PORT: "80"
-    expose:
-      - "80"
-    depends_on:
-      migrate:
-        condition: service_completed_successfully
