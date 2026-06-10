@@ -18,14 +18,14 @@
 ## Архитектура
 
 ```
-┌─────────────────┐        ┌─────────────────┐        ┌─────────────────┐
-│    Frontend     │  HTTP  │     Backend     │  SQL   │   PostgreSQL    │
-│  React + AntD  │ ──────▶ │   Go REST API   │ ──────▶│                 │
-│   :3000         │        │    :8080        │        │    :5432        │
-└─────────────────┘        └─────────────────┘        └─────────────────┘
+┌─────────────────────────────────┐        ┌─────────────────┐
+│           Go Backend            │  SQL   │   PostgreSQL    │
+│  REST API /api  +  React SPA /  │ ──────▶│                 │
+│            :8080                │        │    :5432        │
+└─────────────────────────────────┘        └─────────────────┘
 ```
 
-Фронтенд — React SPA. Бэкенд — REST API на Go. Взаимодействие через JSON
+Go-бэкенд раздаёт и REST API (`/api/*`), и собранный React SPA (`/`). Взаимодействие через JSON.
 
 ---
 
@@ -112,10 +112,10 @@
 
 ```
 autoparts/
-├── main.go                        # Точка входа, роутер
-├── Dockerfile                     # Сборка бэкенда
+├── main.go                        # Точка входа, роутер, раздача статики
+├── Dockerfile                     # Сборка: фронт → Go → scratch-образ
+├── Dockerfile.migrate             # Контейнер с миграциями
 ├── docker-compose.yml             # Оркестрация сервисов
-├── .env                           # Переменные окружения
 ├── migrations/
 │   ├── 001_init.up.sql            # Основная схема БД
 │   └── 002_brands.up.sql          # Марки и связи
@@ -129,7 +129,6 @@ autoparts/
 │       ├── stock.go               # Остатки, приходы, расходы
 │       └── helpers.go             # respondJSON / respondError
 └── frontend/
-    ├── Dockerfile                 # Сборка фронтенда
     └── src/
         ├── api/index.js           # HTTP-клиент
         ├── pages/
@@ -181,4 +180,4 @@ docker compose down
 docker compose down -v
 ```
 
-После запуска открыть в браузере: **http://localhost:3000**
+После запуска открыть в браузере: **http://localhost:8080**
