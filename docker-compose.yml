@@ -44,7 +44,7 @@ services:
     build:
       context: ./frontend
       args:
-        VITE_API_URL: http://maksimpopyvanov-autoparts-8997.twc1.net:8080/api
+        VITE_API_URL: http://maksimpopyvanov-autoparts-a36b.twc1.net:8080/api
     ports:
       - "${FRONTEND_PORT}:3000"
     depends_on:
